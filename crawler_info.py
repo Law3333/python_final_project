@@ -15,10 +15,39 @@ class get_basic_info:
         }
 
     def get_isbn(self):
+        '''Get ISBN of book'''
 
         url_front = "https://libholding.ntut.edu.tw/booksearch.do?searchtype=simplesearch&search_field=FullText&search_input="
         url_back = "&searchsymbol=hyLibCore.webpac.search.common_symbol&execodehidden=true&execode=&ebook="
         url = url_front + self.keyword_urldecode + url_back
+
+        data = self.link_connect(url)
+
+        # ---解析原始碼(html)---
+        root = bs4.BeautifulSoup(data, "html.parser")
+        # print(root.li.string)  # 作者：韓國瑜
+
+        # 尋找 class = "bookDetail" 的 div 標籤
+        book_info = root.find_all("div", class_="bookDetail")
+        book_info = root.find_all("li")
+        print(book_info)
+        # for auther in book_info:
+        #     if auther.a != None:  # 如果標題包含 li 標籤 (沒有被刪除)，印出來
+        #         print(auther.a)
+
+    def get_info(self):
+        '''Get basic info of book'''
+
+        url_front = "https://libholding.ntut.edu.tw/maintain/rightFrame.jsp?searchtype=simplesearch&search_field=FullText&search_input="
+        url_back = "&searchsymbol=hyLibCore.webpac.search.common_symbol&execodehidden=true&execode=&ebook=&resid=188829727&nowpage=1"
+        url = url_front + self.keyword_urldecode + url_back
+
+        data = self.link_connect(url)
+        print(data)
+
+        root = bs4.BeautifulSoup(data, "html.parser")
+
+    def link_connect(self, url):
 
         # let program like a people
         # 建立一個 Request 物件，附加 Headers 的資訊
@@ -27,20 +56,7 @@ class get_basic_info:
         with req.urlopen(self.requert) as response:
             data = response.read().decode("utf-8")
 
-        # ---解析原始碼(html)---
-
-        root = bs4.BeautifulSoup(data, "html.parser")
-        # print(root.li.string)  # 作者：韓國瑜
-
-        # 尋找 class = "bookDetail" 的 div 標籤
-        authers = root.find_all("div", class_="bookDetail")
-        authers = root.find_all("li")
-        print(authers)
-        # for auther in authers:
-        #     if auther.a != None:  # 如果標題包含 li 標籤 (沒有被刪除)，印出來
-        #         print(auther.a)
-
-    # def get_info(self):
+        return data
 
 
-get_basic_info("跟著月亮").get_isbn()
+get_basic_info("跟著月亮").get_info()
