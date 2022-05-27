@@ -10,7 +10,7 @@ class get_basic_info:
         self.keyword_urldecode = quote(keyword)
         self.url_front = "https://libholding.ntut.edu.tw/booksearch.do?searchtype=simplesearch&search_field=FullText&search_input="
         self.url_back = "&searchsymbol=hyLibCore.webpac.search.common_symbol&execodehidden=true&execode=&ebook="
-        self.url = self.url_front+self.keyword_urldecode+self.url_back
+        self.url = self.url_front + self.keyword_urldecode + self.url_back
 
     def executive(self):
 
@@ -38,4 +38,4 @@ class get_basic_info:
         #         print(auther.a)
 
 
-get_basic_info("數學").executive()
+get_basic_info("跟著月亮").executive()
