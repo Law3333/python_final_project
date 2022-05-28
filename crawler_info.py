@@ -17,9 +17,7 @@ class get_basic_info:
     def get_isbn(self):
         '''Get ISBN of book'''
 
-        url_front = "https://libholding.ntut.edu.tw/booksearch.do?searchtype=simplesearch&search_field=FullText&search_input="
-        url_back = "&searchsymbol=hyLibCore.webpac.search.common_symbol&execodehidden=true&execode=&ebook="
-        url = url_front + self.keyword_urldecode + url_back
+        url = f"https://libholding.ntut.edu.tw/booksearch.do?searchtype=simplesearch&search_field=FullText&search_input={self.keyword_urldecode}&searchsymbol=hyLibCore.webpac.search.common_symbol&execodehidden=true&execode=&ebook="
 
         data = self.link_connect(url)
 
@@ -38,9 +36,7 @@ class get_basic_info:
     def get_info(self):
         '''Get basic info of book'''
 
-        url_front = "https://libholding.ntut.edu.tw/maintain/rightFrame.jsp?searchtype=simplesearch&search_field=FullText&search_input="
-        url_back = "&searchsymbol=hyLibCore.webpac.search.common_symbol&execodehidden=true&execode=&ebook=&resid=188829727&nowpage=1"
-        url = url_front + self.keyword_urldecode + url_back
+        url = f"https://libholding.ntut.edu.tw/maintain/rightFrame.jsp?searchtype=simplesearch&search_field=FullText&search_input={self.keyword_urldecode}&searchsymbol=hyLibCore.webpac.search.common_symbol&execodehidden=true&execode=&ebook=&resid=188829727&nowpage=1"
 
         data = self.link_connect(url)
         print(data)
