@@ -1,3 +1,4 @@
+from tokenize import group
 import bs4
 import urllib.request as req
 import json
@@ -66,7 +67,7 @@ class get_basic_info:
             for id in book_info:
                 book_id += id
 
-            return book_id
+            return int(book_id)
 
         except:
             # parent.location.href = 'bookDetail.do?id=503958';
@@ -75,8 +76,8 @@ class get_basic_info:
             book_id = str()
             for id in book_info:
                 book_id += id
-
-            return book_id
+            pass
+            return int(book_id)
 
     def get_location(self):
         '''
@@ -111,33 +112,75 @@ class get_basic_info:
         - 條碼號
         - 作者
         - 索書號
+
+        basic_info_list = ['', 'aLB', 'bA05', 'c1350240', 'd783.3886', 'e8555:2', 'pCB', 'k購買', 's244', 'tCCL', 'y2018', 'j平裝', 'oT2']
+
+        條碼號(book_barcode) : c 
+        索書號(book_request) : d + e + y
+
         '''
 
         book_id = self.get_book_id()
-
         url = f"https://libholding.ntut.edu.tw/bookDetail.do?id={book_id}&Lflag=1"
 
         request_data = self.link_connect(url)
-
         root = bs4.BeautifulSoup(request_data, "html.parser")
+        book_info = root.find("div", id="detailViewMARC").text
 
-        # book_info = |aLB|bA05|c1350240|d783.3886|e8555:2|pCB|k購買|s244|tCCL|y2018|j平裝|oT2
-        book_info = root.find_all(
-            "td", style="word-break: break-all; width: 500px")
-        # book_info = book_info.split('|')
-        '''
-        book_info = 
-        ['\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t', 'aLB', 'bA05', 'c1350240', 'd783.3886', 'e8555:2', 'pCB', 'k購買', 's244', 'tCCL', 'y2018', 'j平裝', 'oT2\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t']
-        
-        條碼號 : c
-        索書號 : d + e + 3        
-        
-        
-        '''
+        '''--- target : basic_info = |aLB|bA05|c1350240|d783.3886|e8555:2|pCB|k購買|s244|tCCL|y2018|j平裝|oT2 ---'''
 
-        print(book_info)
+        book_info = book_info.replace(" ", "").replace(
+            "\n", "").replace("\r", "").replace("\t", "")
+
+        try:
+            basic_info = re.search(
+                "095(.*?).*?100", book_info).group(0).replace("095", "").replace("100", "").strip()
+
+        except:
+            basic_info = re.search(
+                "095(.*?).*?110", book_info).group(0).replace("095", "").replace("100", "").strip()
+
+        basic_info_list = basic_info.split('|')
+        # ['', 'aLB', 'bA05', 'c1350240', 'd783.3886', 'e8555:2', 'pCB', 'k購買', 's244', 'tCCL', 'y2018', 'j平裝', 'oT2']
+
+        c, d, e, y = str(), str(), str(), str()
+        basic_info_list.pop(0)  # 移除掉空白
+
+        for value in basic_info_list:
+            if value[0] == "c":
+                c = value[1:]
+            elif value[0] == "d":
+                d = value[1:]
+            elif value[0] == "e":
+                e = value[1:]
+            elif value[0] == "y":
+                y = value[1:]
+
+        book_barcode = c
+        book_request = d + " " + e + " " + y
+
+        '''--- target : author ---'''
+        # print(book_info)
+
+        try:
+            author_info = re.search(
+                "1001(.*?).*?245", book_info).group(0).replace("1001", "").replace("245", "").replace("|a", "").strip()
+        # print(author_info)
+        except:
+            author_info = re.search(
+                "1102(.*?).*?245", book_info).group(0).replace("1102", "").replace("245", "").replace("|a", "").strip()
+        # 有些書不乾淨還要在處理一下
+        try:
+            author_info = author_info.split('|')[0]
+        except:
+            pass
+
+        print(author_info, "||", book_barcode, "||", book_request)
 
 
-# get_basic_info("跟著月亮").get_location()
-get_basic_info("臺灣傳統古窯").get_basic_info()
+# get_basic_info("臺灣傳統古窯").get_basic_info()
+# get_basic_info("青花瓷的故事").get_basic_info()
+# get_basic_info("色繪古都 : 京都陶瓷漫步").get_basic_info()
 # get_basic_info("跟著月亮").get_basic_info()
+# print(get_basic_info("京阪奈地鐵遊").get_book_id())
+get_basic_info("京阪奈地鐵遊. 2018年最新版").get_basic_info()
