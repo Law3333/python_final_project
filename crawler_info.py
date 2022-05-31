@@ -70,13 +70,16 @@ class get_basic_info:
             return int(book_id)
 
         except:
+
             # parent.location.href = 'bookDetail.do?id=503958';
             book_info = root.script.string
+            # print(type(book_info), book_info)
             book_info = re.findall('\d', book_info)
+            # print(type(book_info), book_info)
             book_id = str()
             for id in book_info:
                 book_id += id
-            pass
+
             return int(book_id)
 
     def get_location(self):
@@ -121,6 +124,7 @@ class get_basic_info:
         '''
 
         book_id = self.get_book_id()
+
         url = f"https://libholding.ntut.edu.tw/bookDetail.do?id={book_id}&Lflag=1"
 
         request_data = self.link_connect(url)
@@ -138,7 +142,7 @@ class get_basic_info:
 
         except:
             basic_info = re.search(
-                "095(.*?).*?110", book_info).group(0).replace("095", "").replace("100", "").strip()
+                "095(.*?).*?110", book_info).group(0).replace("095", "").replace("110", "").strip()
 
         basic_info_list = basic_info.split('|')
         # ['', 'aLB', 'bA05', 'c1350240', 'd783.3886', 'e8555:2', 'pCB', 'k購買', 's244', 'tCCL', 'y2018', 'j平裝', 'oT2']
@@ -178,9 +182,8 @@ class get_basic_info:
         print(author_info, "||", book_barcode, "||", book_request)
 
 
-# get_basic_info("臺灣傳統古窯").get_basic_info()
-# get_basic_info("青花瓷的故事").get_basic_info()
-# get_basic_info("色繪古都 : 京都陶瓷漫步").get_basic_info()
-# get_basic_info("跟著月亮").get_basic_info()
-# print(get_basic_info("京阪奈地鐵遊").get_book_id())
-get_basic_info("京阪奈地鐵遊. 2018年最新版").get_basic_info()
+get_basic_info("臺灣傳統古窯").get_basic_info()
+get_basic_info("青花瓷的故事").get_basic_info()
+get_basic_info("色繪古都 : 京都陶瓷漫步").get_basic_info()
+get_basic_info("跟著月亮").get_basic_info()
+get_basic_info("京阪奈地鐵遊").get_basic_info()
