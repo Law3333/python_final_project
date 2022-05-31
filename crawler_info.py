@@ -104,7 +104,7 @@ class get_basic_info:
             "var LOC2_json = (.*).*?var SE_json", book_info).group(1)
         location_dict = json.loads(location_dict)
         location_info = location_dict['dataset'][0]['input']
-        print(location_info)
+        # print(location_info)
 
         return location_info
 
@@ -179,11 +179,29 @@ class get_basic_info:
         except:
             pass
 
-        print(author_info, "||", book_barcode, "||", book_request)
+        location = self.get_location()
+
+        print(author_info, "||", book_barcode,
+              "||", book_request, "||", location)
 
 
-get_basic_info("臺灣傳統古窯").get_basic_info()
-get_basic_info("青花瓷的故事").get_basic_info()
-get_basic_info("色繪古都 : 京都陶瓷漫步").get_basic_info()
-get_basic_info("跟著月亮").get_basic_info()
-get_basic_info("京阪奈地鐵遊").get_basic_info()
+# if __name__ == '__main__':
+#     book_name = input("please input book name : ")
+#     get_basic_info(book_name).get_basic_info()
+
+
+'''
+鄧淑慧 || 1312840 || 464.0933 8563 2015 || 三樓書庫
+芬雷 || 1293934 || 464.16092 874 2011 || 一樓暢銷文庫
+陳彥璋 || 1334204 || 731.752185 8755 2017 || 一樓暢銷文庫
+韓國瑜 || 1350240 || 783.3886 8555:2 2018 || 三樓書庫
+mediaporta || 1339500 || 731.7509 8635 2018 ||  一樓經典文庫
+劉如水 || 1307404 || 796.6 8768 2004 || 一樓暢銷文庫
+'''
+
+# get_basic_info("臺灣傳統古窯").get_basic_info()
+# get_basic_info("青花瓷的故事").get_basic_info()
+# get_basic_info("色繪古都 : 京都陶瓷漫步").get_basic_info()
+# get_basic_info("跟著月亮").get_basic_info()
+# get_basic_info("京阪奈地鐵遊").get_basic_info()
+# get_basic_info("宋元明清瓷器鑑賞").get_basic_info()
