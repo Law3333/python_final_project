@@ -185,9 +185,9 @@ class get_basic_info:
               "||", book_request, "||", location)
 
 
-# if __name__ == '__main__':
-#     book_name = input("please input book name : ")
-#     get_basic_info(book_name).get_basic_info()
+if __name__ == '__main__':
+    book_name = input("please input book name : ")
+    get_basic_info(book_name).get_basic_info()
 
 
 '''
