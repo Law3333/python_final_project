@@ -55,9 +55,15 @@ class get_basic_info:
         try:
             '''在這邊先嘗試第二種情況，如果錯誤則進行第一種情況'''
 
+            '''
+            2022/06/13 
+            原本為第一種方案，但是會因為圖書館系統'電子書'與'館藏書'排序問題，造成可能取到電子書，
+            造成後面執行錯誤(因為電子書的格式不同)，所以之後的方案會先篩選是否為'館藏書'。
+
             # 尋找 Book ID
             # <input id="s511117" name="sid" type="checkbox" value="511117"/>
             book_info = str(root.find_all("input")[1])
+            # print(book_info)
             # value="511117"/>
             book_info = book_info.split()[-1]
             #['5', '1', '1', '1', '1', '7']
@@ -68,6 +74,37 @@ class get_basic_info:
                 book_id += id
 
             return int(book_id)
+            '''
+
+            # 尋找 Book ID
+            # //讀取account和館藏
+            # loadAccount(555453);loadHoldIframe({"sid":"555453","execcode2":"m","execcode1":"m","cln":"http"}); (此為電子書)
+            # loadAccount(509546);loadHoldIframe({"sid":"509546","execcode2":"m","execcode1":"a","cln":"CB"}); (此為館藏書，為目標)
+            book_info = root.find_all(
+                "script", type="text/javascript")[7].string
+
+            book_info = book_info.replace(" ", "").replace(
+                "\n", "").replace("\r", "").replace("\t", "")
+
+            # loadAccount(555453);
+            # loadHoldIframe({"sid":"555453","execcode2":"m","execcode1":"m","cln":"http"});
+            # loadAccount(509546);
+            # loadHoldIframe({"sid":"509546","execcode2":"m","execcode1":"a","cln":"CB"});
+            book_info = re.search(
+                "讀取account和館藏(.*?).*?input", book_info).group(0).replace('$("input', '').replace("讀取account和館藏", "").strip()
+
+            book_info_list = book_info.split(';')
+            book_info_list.pop(-1)  # 移除掉最後的 ; 的空白
+
+            # 判斷 element 裡面是否有 http, 首先抓出 loadHoldIframe, 接著用 json 解析, 將 cln 不是 http 的 book id 回傳
+            for value in book_info_list:
+                if "loadHoldIframe" in value:
+                    value = value.replace(
+                        "loadHoldIframe(", "").replace(")", "")
+                    value = json.loads(value)
+                    if value['cln'] != "http":
+                        # print(int(value['sid']))
+                        return int(value['sid'])
 
         except:
 
@@ -124,6 +161,7 @@ class get_basic_info:
         '''
 
         book_id = self.get_book_id()
+        # print(book_id)
 
         url = f"https://libholding.ntut.edu.tw/bookDetail.do?id={book_id}&Lflag=1"
 
@@ -190,14 +228,6 @@ if __name__ == '__main__':
     get_basic_info(book_name).get_basic_info()
 
 
-'''
-鄧淑慧 || 1312840 || 464.0933 8563 2015 || 三樓書庫
-芬雷 || 1293934 || 464.16092 874 2011 || 一樓暢銷文庫
-陳彥璋 || 1334204 || 731.752185 8755 2017 || 一樓暢銷文庫
-韓國瑜 || 1350240 || 783.3886 8555:2 2018 || 三樓書庫
-mediaporta || 1339500 || 731.7509 8635 2018 ||  一樓經典文庫
-劉如水 || 1307404 || 796.6 8768 2004 || 一樓暢銷文庫
-'''
 
 # get_basic_info("臺灣傳統古窯").get_basic_info()
 # get_basic_info("青花瓷的故事").get_basic_info()
@@ -205,3 +235,25 @@ mediaporta || 1339500 || 731.7509 8635 2018 ||  一樓經典文庫
 # get_basic_info("跟著月亮").get_basic_info()
 # get_basic_info("京阪奈地鐵遊").get_basic_info()
 # get_basic_info("宋元明清瓷器鑑賞").get_basic_info()
+# get_basic_info("能源，迫在眉睫的抉擇：為人類文明史續命，抑或摧毀人類文明的一場賭注").get_basic_info()
+
+
+'''
+
+鄧淑慧 || 1312840 || 464.0933 8563 2015 || 三樓書庫
+芬雷 || 1293934 || 464.16092 874 2011 || 一樓暢銷文庫
+陳彥璋 || 1334204 || 731.752185 8755 2017 || 一樓暢銷文庫
+韓國瑜 || 1350240 || 783.3886 8555:2 2018 || 三樓書庫
+mediaporta || 1339500 || 731.7509 8635 2018 ||  一樓經典文庫
+劉如水 || 1307404 || 796.6 8768 2004 || 一樓暢銷文庫
+
+'''
+
+
+'''
+2022/06/13
+AttributeError: 'NoneType' object has no attribute 'group'
+能源，迫在眉睫的抉擇：為人類文明史續命，抑或摧毀人類文明的一場賭注
+509546(館藏)
+555453(電子)
+'''
