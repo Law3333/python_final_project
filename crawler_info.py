@@ -110,9 +110,7 @@ class get_basic_info:
 
             # parent.location.href = 'bookDetail.do?id=503958';
             book_info = root.script.string
-            # print(type(book_info), book_info)
             book_info = re.findall('\d', book_info)
-            # print(type(book_info), book_info)
             book_id = str()
             for id in book_info:
                 book_id += id
