@@ -228,7 +228,6 @@ if __name__ == '__main__':
     get_basic_info(book_name).get_basic_info()
 
 
-
 # get_basic_info("臺灣傳統古窯").get_basic_info()
 # get_basic_info("青花瓷的故事").get_basic_info()
 # get_basic_info("色繪古都 : 京都陶瓷漫步").get_basic_info()
