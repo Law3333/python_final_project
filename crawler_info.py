@@ -1,4 +1,3 @@
-from tokenize import group
 import bs4
 import urllib.request as req
 import json
