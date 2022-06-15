@@ -40,7 +40,7 @@ class get_photo:
         print(book_name,book_img)
 
         try:
-            req.urlretrieve(book_img, "./image/"+book_name+".jpg")
+            req.urlretrieve(book_img, "./Download_image/"+book_name+".jpg")
         except:
             pass
 
