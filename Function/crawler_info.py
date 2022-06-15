@@ -32,6 +32,8 @@ class get_basic_info:
         這邊連到搜尋畫面的 API
         '''
 
+        # print(self.keyword_urldecode)
+
         url = f"https://libholding.ntut.edu.tw/booksearch.do?searchtype=simplesearch&search_field=FullText&search_input={self.keyword_urldecode}&searchsymbol=hyLibCore.webpac.search.common_symbol&execodehidden=true&execode=&ebook="
 
         request_data = self.link_connect(url)
@@ -146,6 +148,9 @@ class get_basic_info:
         '''
         取得書的基本資料：
         包含
+        - 書名
+        <meta name="Title" content="跟著月亮走 :" />
+
         - 條碼號
         - 作者
         - 索書號
@@ -164,9 +169,16 @@ class get_basic_info:
 
         request_data = self.link_connect(url)
         root = bs4.BeautifulSoup(request_data, "html.parser")
-        book_info = root.find("div", id="detailViewMARC").text
+
+        '''--- target : book name  '''
+
+        book_name = root.find("meta", {"name": "Title"})
+        book_name = str(book_name['content']).replace(
+            ".", "").replace("=", "").replace("/", "").replace(":", "")
 
         '''--- target : basic_info = |aLB|bA05|c1350240|d783.3886|e8555:2|pCB|k購買|s244|tCCL|y2018|j平裝|oT2 ---'''
+
+        book_info = root.find("div", id="detailViewMARC").text
 
         book_info = book_info.replace(" ", "").replace(
             "\n", "").replace("\r", "").replace("\t", "")
@@ -216,13 +228,15 @@ class get_basic_info:
 
         location = self.get_location()
 
-        print(author_info, "||", book_barcode,
+        print(book_name, "||", author_info, "||", book_barcode,
               "||", book_request, "||", location)
+
+        return book_name, author_info, book_barcode, book_request, location
 
 
 if __name__ == '__main__':
     book_name = input("please input book name : ")
-    get_basic_info(book_name).get_basic_info()
+    get_basic_info("book_name").get_basic_info()
 
 
 # get_basic_info("臺灣傳統古窯").get_basic_info()
@@ -239,7 +253,9 @@ if __name__ == '__main__':
 鄧淑慧 || 1312840 || 464.0933 8563 2015 || 三樓書庫
 芬雷 || 1293934 || 464.16092 874 2011 || 一樓暢銷文庫
 陳彥璋 || 1334204 || 731.752185 8755 2017 || 一樓暢銷文庫
-韓國瑜 || 1350240 || 783.3886 8555:2 2018 || 三樓書庫
+韓國瑜 || 1350240 || 783.3886 8555:2 2018 || 三樓書庫  
+%E8%B7%9F%E8%91%97%E6%9C%88%E4%BA%AE
+511117
 mediaporta || 1339500 || 731.7509 8635 2018 ||  一樓經典文庫
 劉如水 || 1307404 || 796.6 8768 2004 || 一樓暢銷文庫
 

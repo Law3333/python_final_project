@@ -47,12 +47,12 @@ class get_photo:
 
 
 
-get_photo("臺灣傳統古窯").get_photo()
-get_photo("青花瓷的故事").get_photo()
-get_photo("色繪古都 : 京都陶瓷漫步").get_photo()
-get_photo("跟著月亮").get_photo()
-get_photo("京阪奈地鐵遊").get_photo()
-get_photo("宋元明清瓷器鑑賞").get_photo()
+# get_photo("臺灣傳統古窯").get_photo()
+# get_photo("青花瓷的故事").get_photo()
+# get_photo("色繪古都 : 京都陶瓷漫步").get_photo()
+# get_photo("跟著月亮").get_photo()
+# get_photo("京阪奈地鐵遊").get_photo()
+# get_photo("宋元明清瓷器鑑賞").get_photo()
 
 
 
