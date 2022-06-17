@@ -31,7 +31,7 @@ class get_photo:
         # response = requests.get(url)
         # root = BeautifulSoup(response.text, "html.parser")
 
-        book_info = root.find_all("div", {"class":"box_1"})[0]
+        book_info = root.find_all("div", {"class":"box"})[0]
         book_info = book_info.find('img')
         
         book_img = str(book_info["data-src"])
@@ -40,7 +40,7 @@ class get_photo:
         print(book_name,book_img)
 
         try:
-            req.urlretrieve(book_img, "./Download_image/"+book_name+".jpg")
+            req.urlretrieve(book_img, "../Download_image/"+book_name+".jpg")
         except:
             pass
 
